@@ -115,5 +115,85 @@ print (response)
     a) [custfeedback.csv](sampledata/custfeedback.csv)
 
     b) [latlon.csv](sampledata/latlon.csv)
+ 
+ 2. Create a new paragraph on your prerequisite notebook and execute the below code. Change the S3 location as yours (bucket, key). This will upload the latlon data to a DynamoDB table you created earlier.
+ 
+ ```
+ %flink.ipyflink
+#upload lanlon data
+import boto3
+import csv
+import codecs
+region='ap-southeast-2'
+recList=[]
+tableName='innovate_latlon'
+s3 = boto3.resource('s3')
+dynamodb = boto3.client('dynamodb', region_name=region)
+bucket='YOUR_BUCKETNAME'
+key='real-time-sentiment-flinkSQL-KDAStudio/latlon.csv'
+obj = s3.Object(bucket, key).get()['Body']
+batch_size = 100
+batch = []
+i=0
 
+for row in csv.DictReader(codecs.getreader('utf-8')(obj)):
+    pk= (row["id"])
+    postcode= (row["postcode"])
+    suburb= (row["suburb"])
+    State= (row["State"])
+    latitude= (row["latitude"])
+    longitude= (row["longitude"])
+    
+    response = dynamodb.put_item(
+        TableName=tableName,
+        Item={
+        'pk' : {'S':str(pk)},
+        'postcode': {'S':postcode},
+        'suburb': {'S':suburb},
+        'State': {'S':State},
+        'latitude': {'S':latitude},
+        'longitude': {'S':longitude}
+        }
+    )
+    i=i+1
+    #print ('Total insert: '+ str(i))
+    
+print ('completed')
+ ```
 
+3. Create a new paragraph on your prerequisite notebook and execute the below code. Change the S3 location as yours (bucket, key). This will upload the customer feedback data to a DynamoDB table you created earlier.
+
+```
+%flink.ipyflink
+#upload custfeedback.csv
+import boto3
+import csv
+import codecs
+region='ap-southeast-2'
+recList=[]
+tableName='innovate_custfeedback'
+s3 = boto3.resource('s3')
+dynamodb = boto3.client('dynamodb', region_name=region)
+bucket='YOUR_BUCKETNAME'
+key='real-time-sentiment-flinkSQL-KDAStudio/custfeedback.csv'
+obj = s3.Object(bucket, key).get()['Body']
+batch_size = 100
+batch = []
+i=0
+
+for row in csv.DictReader(codecs.getreader('utf-8')(obj)):
+    pk= (row["id"])
+    feedback= (row["feedback"])
+    
+    response = dynamodb.put_item(
+        TableName=tableName,
+        Item={
+        'pk' : {'S':str(pk)},
+        'feedback': {'S':feedback}
+        }
+    )
+    i=i+1
+    #print ('Total insert: '+ str(i))
+    
+print ('completed:' + str(i))
+```
