@@ -43,3 +43,29 @@
 pip install boto3
 ```
 
+5. Create a new paragraph and execute the below code. This will create a DynamoDB table in ap-southeast-2
+```
+%flink.ipyflink
+#create table innovate_latlon
+import boto3
+region='ap-southeast-2'
+dynamodb = boto3.resource('dynamodb',region_name=region)
+response = dynamodb.create_table(
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'pk',
+            'AttributeType': 'S'
+        },
+    ],
+    TableName='innovate_latlon',
+    KeySchema=[
+        {
+            'AttributeName': 'pk',
+            'KeyType': 'HASH'
+        },
+    ],
+    BillingMode='PAY_PER_REQUEST'
+)
+```
+
+
