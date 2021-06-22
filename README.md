@@ -284,3 +284,9 @@ for x in range(30000):
     
 print('###total rows:#### '+ str(i))
 ```
+
+### Real-time analytics with Flink SQL
+1. In the notebook console create a new note
+2. enter a name of your notebook- "flinkSQLExample"
+3. Select Default Interprete as Flink and create the notebook
+
