@@ -111,6 +111,8 @@ print (response)
 
 ## Generating random data
 1. Create a new S3 bucket or upload below csv files to your S3 bucket
-Feedback [custfeedback](sampledata/custfeedback.csv)
 
-latlon.csv
+a) [custfeedback.csv](sampledata/custfeedback.csv)
+b) [latlon.csv](sampledata/latlon.csv)
+
+
