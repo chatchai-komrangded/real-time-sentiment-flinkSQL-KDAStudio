@@ -23,8 +23,14 @@
 
 ![kda1](/images/kda3.png)
 
-## Working with Kinesis Data Analytics Studio - example prerequisite
+## Working with Kinesis Data Analytics Studio
 1. Go to Kinesis Data Analytics Console: console.aws.amazon.com/kinesisanalytics
 2. Click on Studio tab and select the notebook you have created in the previous step
 3. Click on Run and Click on Open in Apache Zeppelin once the statue of the Notebook is running
 ![kda4](/images/kda4.png)
+
+## Working with Kinesis Data Analytics Studio - create prerequisite notebook
+1. In the notebook console create a new note
+2. enter a name of your notebook- "prerequisite"
+3. Select Default Interprete as Flink and create the notebook
+![kda5](/images/kda5.png)
