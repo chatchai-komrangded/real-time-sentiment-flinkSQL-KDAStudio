@@ -34,3 +34,9 @@
 2. enter a name of your notebook- "prerequisite"
 3. Select Default Interprete as Flink and create the notebook
 ![kda5](/images/kda5.png)
+
+** We are going to use the notebook to provisioned somes AWS resources, for example DynamoDB table, Kinesis Data Streams etc. For that we are using boto3.
+`%flink.ipyflink
+pip install boto3
+`
+
