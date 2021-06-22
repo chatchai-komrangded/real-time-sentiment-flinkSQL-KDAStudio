@@ -69,3 +69,48 @@ response = dynamodb.create_table(
 ```
 ![kda6](/images/kda6.png)
 
+6. Create a new paragraph and execute the below code. This will create another DynamoDB table in ap-southeast-2
+```
+%flink.ipyflink
+#create table innovate_custfeedback
+import boto3
+region='ap-southeast-2'
+dynamodb = boto3.resource('dynamodb',region_name=region)
+response = dynamodb.create_table(
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'pk',
+            'AttributeType': 'S'
+        },
+    ],
+    TableName='innovate_custfeedback',
+    KeySchema=[
+        {
+            'AttributeName': 'pk',
+            'KeyType': 'HASH'
+        },
+    ],
+    BillingMode='PAY_PER_REQUEST'
+)
+```
+
+7. Create a new paragraph and execute the below code. This will create a kinesis data stream in ap-southeast-2
+```
+%flink.ipyflink
+#create KDS innovate_feedback
+import boto3
+region='ap-southeast-2'
+kinesis = boto3.client('kinesis',region_name=region)
+response = kinesis.create_stream(
+    StreamName='innovate_feedback',
+    ShardCount=3
+)
+print (response)
+
+```
+
+## Generating random data
+1. Create a new S3 bucket or upload below csv files to your S3 bucket
+Feedback [custfeedback](sampledata/custfeedback.csv)
+
+latlon.csv
