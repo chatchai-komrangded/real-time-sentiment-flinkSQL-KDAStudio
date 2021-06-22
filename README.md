@@ -285,8 +285,67 @@ for x in range(30000):
 print('###total rows:#### '+ str(i))
 ```
 
-### Real-time analytics with Flink SQL
+## Real-time analytics with Flink SQL
 1. In the notebook console create a new note
 2. enter a name of your notebook- "flinkSQLExample"
 3. Select Default Interprete as Flink and create the notebook
+4. Execute the below code
 
+```
+%flink.ssql
+
+CREATE TABLE innovate_feedback (
+    product VARCHAR(50),
+    sentiment VARCHAR(50),
+    feedback VARCHAR(500),
+    lat DOUBLE,
+    lon DOUBLE,
+    state VARCHAR(20),
+    postcode VARCHAR(30),
+    suburb VARCHAR(30),
+    event_time TIMESTAMP(3),
+    WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND
+)
+PARTITIONED BY (product)
+WITH (
+    'connector' = 'kinesis',
+    'stream' = 'innovate_feedback',
+    'aws.region' = 'ap-southeast-2',
+    'scan.stream.initpos' = 'LATEST',
+    'format' = 'json',
+    'json.timestamp-format.standard' = 'ISO-8601'
+)
+
+```
+5. Add a new paragaph and start analyzing data in real-time
+```
+%flink.ssql(type=update)
+
+SELECT * FROM innovate_feedback;
+
+```
+![kda7](/images/kda7.png)
+
+6.  Add a new paragraph and execute below code
+```
+%flink.ssql(type=update)
+--Product wise sentiment
+SELECT innovate_feedback.product, COUNT(*) AS totalsentiment, innovate_feedback.sentiment,
+       TUMBLE_END(event_time, INTERVAL '10' second) as tum_time
+  FROM innovate_feedback
+GROUP BY TUMBLE(event_time, INTERVAL '10' second), innovate_feedback.product, innovate_feedback.sentiment;
+
+```
+![kda8](/images/kda8.png)
+
+7. Add a new paragraph and execute below code
+```
+%flink.ssql(type=update)
+--state wise sentiment
+SELECT innovate_feedback.state, COUNT(*) AS totalsentiment, innovate_feedback.sentiment,
+       TUMBLE_END(event_time, INTERVAL '10' second) as tum_time
+  FROM innovate_feedback
+GROUP BY TUMBLE(event_time, INTERVAL '10' second), innovate_feedback.state, innovate_feedback.sentiment;
+
+```
+![kda9](/images/kda9.png)
