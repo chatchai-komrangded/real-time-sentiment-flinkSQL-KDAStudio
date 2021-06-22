@@ -2,5 +2,5 @@
 
 ## Reference architecture
 
-![Tux, the Linux mascot](/images/kda1.PNG)
+![kda1](/images/kda1.PNG)
 
