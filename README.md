@@ -12,3 +12,5 @@
 5. Enter a notebook name
 6. For AWS Gluedatabse click on the refresh button and select Default Glue database. If the list is still empty, create a new Glue database.
 7. Click on Create Studio Notebook.
+
+![kda1](/images/kda2.PNG)
