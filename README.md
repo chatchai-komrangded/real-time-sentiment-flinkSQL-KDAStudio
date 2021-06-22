@@ -109,7 +109,7 @@ print (response)
 
 ```
 
-## Generating random data
+## Uploading sample data
 1. Create a new S3 bucket or upload below csv files to your S3 bucket
 
     a) [custfeedback.csv](sampledata/custfeedback.csv)
@@ -196,4 +196,91 @@ for row in csv.DictReader(codecs.getreader('utf-8')(obj)):
     #print ('Total insert: '+ str(i))
     
 print ('completed:' + str(i))
+```
+
+## Generating random data to Kinesis data streams
+1. Create a new paragraph on your prerequisite notebook and execute the below code. This will analyze customer feedback sentiment using Amazon comprehend and send those data to a Kinesis Data Stream.
+
+```
+%flink.ipyflink
+#KDS random data generator
+import json
+import boto3
+import csv
+import datetime
+import random
+from boto3.dynamodb.conditions import Key
+tablename_latlon='innovate_latlon'
+kdsname='innovate_feedback'
+tablename_innovate_custfeedback='innovate_custfeedback'
+region='ap-southeast-2'
+i=0
+clientkinesis = boto3.client('kinesis',region_name=region)
+
+
+
+def getfeedback():
+    dynamodb = boto3.resource('dynamodb',region_name=region)
+    table = dynamodb.Table(tablename_innovate_custfeedback)
+    randomnum = random.randint(1, 1000)
+    response = table.query(
+        KeyConditionExpression=Key('pk').eq(str(randomnum))
+    )
+    items=response['Items']
+    for item in items:
+        feedback=item['feedback']
+    return feedback
+
+def getproduct(i):
+    product=["Kindle 10th Gen", "Fire TV Stick Lite", "Amazon eero mesh", "Ring Home Security", "Echo Dot 4th Gen", 'Roborock Vacuum cleaners','Panasonic LUMIX Camera', 'Philips Air Purifier', 'Anker Chargers hub']
+    return (product[i])
+
+def getsentiment(mystr):
+    client = boto3.client('comprehend',region_name=region)
+    response = client.detect_sentiment(Text=mystr, LanguageCode='en')
+    return response['Sentiment']
+    
+def getlanlon():
+    dynamodb = boto3.resource('dynamodb',region_name=region)
+    table = dynamodb.Table(tablename_latlon)
+    randomnum = random.randint(1, 16491)
+    response = table.query(
+        KeyConditionExpression=Key('pk').eq(str(randomnum))
+    )
+    items=response['Items']
+    #lat='222'
+    #lon='123'
+    for item in items:
+        lat=item['latitude']
+        lon=item['longitude']
+        state=item['State']
+        postcode=item['postcode']
+        suburb=item['suburb']
+    return lat, lon, state, postcode, suburb
+
+
+
+for x in range(30000):
+    i=int(i)+1
+    product=getproduct(random.randint(0, 8))
+    event_time=datetime.datetime.now().isoformat()
+    lat, lon,state,postcode, suburb=getlanlon()
+    feedback=getfeedback()
+    sentiment=getsentiment(feedback)
+    new_dict={}
+    new_dict["product"]=product
+    new_dict["sentiment"]=sentiment
+    new_dict["feedback"]=feedback
+    new_dict["event_time"]=event_time
+    new_dict["lat"]=lat
+    new_dict["lon"]=lon
+    new_dict["state"]=state
+    new_dict["postcode"]=postcode
+    new_dict["suburb"]=suburb
+    clientkinesis.put_record(
+                    StreamName=kdsname,
+                    Data=json.dumps(new_dict),
+                    PartitionKey=product)
+    
+print('###total rows:#### '+ str(i))
 ```
