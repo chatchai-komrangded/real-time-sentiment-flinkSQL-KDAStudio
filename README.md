@@ -67,5 +67,5 @@ response = dynamodb.create_table(
     BillingMode='PAY_PER_REQUEST'
 )
 ```
-
+![kda6](/images/kda6.png)
 
