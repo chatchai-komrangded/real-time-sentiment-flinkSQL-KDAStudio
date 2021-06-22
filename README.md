@@ -199,7 +199,7 @@ print ('completed:' + str(i))
 ```
 
 ## Generating random data to Kinesis data streams
-1. Create a new paragraph on your prerequisite notebook and execute the below code. This will analyze customer feedback sentiment using Amazon comprehend and send those data to a Kinesis Data Stream.
+1. Create a new paragraph on your prerequisite notebook and execute the below code. This will analyze customer feedback sentiment using Amazon comprehend and send those data (30,000 ingestions) to a Kinesis Data Stream.
 
 ```
 %flink.ipyflink
