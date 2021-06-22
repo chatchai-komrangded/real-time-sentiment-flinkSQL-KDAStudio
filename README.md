@@ -2,5 +2,5 @@
 
 ## Reference architecture
 
-![Tux, the Linux mascot](images/kda1.png)
+![Tux, the Linux mascot](real-time-sentiment-flinkSQL-KDAStudio/images/kda1.PNG)
 
