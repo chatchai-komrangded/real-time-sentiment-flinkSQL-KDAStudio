@@ -1,5 +1,6 @@
 #Real-time sentiment analysis on customer feedback
 
 ##Reference architecture
-!(/images/kda1.png)
+
+![Tux, the Linux mascot](/images/kda1.png)
 
