@@ -37,8 +37,9 @@
 
 ** We are going to use the notebook to provisioned somes AWS resources, for example DynamoDB table, Kinesis Data Streams etc. For that we are using boto3. 
 4. execute the following code to install boto3
-`%flink.ipyflink
+```
+%flink.ipyflink
 
 pip install boto3
-`
+```
 
